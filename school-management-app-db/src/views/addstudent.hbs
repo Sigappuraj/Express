@@ -1,0 +1,73 @@
+<div class="container">
+  <h1>Student form</h1>
+  <form id="student-form" action="{{action}}" method="{{method}}" _method="{{method}}">
+    <input type="hidden" name="teacherId" value="1" />
+    <label for="fname">First name:</label>
+    <input type="text" id="fname" name="firstName" value="{{student.firstName}}" placeholder="First Name" required />
+    <br />
+    <label for="lname">Last name:</label>
+    <input type="text" id="lname" name="lastName" value="{{student.lastName}}" placeholder="Last Name" required />
+    <br />
+    <label for="student-age">Age:</label>
+    <input type="text" id="student-age" name="age" value="{{student.age}}" placeholder="Age in years" required />
+    <br />
+    <label>Gender:</label>
+    <input type="radio" id="gender-male" value="Male" name="gender"
+      {{#if (ifEquality student.gender "Male")}}checked{{/if}} required />
+    <label for="gender-male">Male</label>
+    <input type="radio" id="gender-female" value="Female" name="gender"
+      {{#if (ifEquality student.gender "Female")}}checked{{/if}} required />
+    <label for="gender-female">Female</label>
+    <br />
+    <input class="btn btn-primary" type="submit" value="Add Student" />
+  </form>
+</div>
+<script>
+  const $addStudentForm = document.querySelector("#student-form");
+
+  $addStudentForm.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const submitUrl = $addStudentForm.action;
+    const submitMethod = $addStudentForm.getAttribute("_method");
+    const formData = new FormData($addStudentForm);
+    let studentDetail = {};
+    for (const fields of formData.entries()) {
+      const [key, value] = fields;
+      studentDetail[key] = value;
+    }
+
+    const config = {
+      method: submitMethod.toUpperCase(),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(studentDetail)
+    }
+
+    fetch(submitUrl, config)
+      .then(response => {
+        if (response.status === 200) {
+          return response.json()
+        } else {
+          throw (new Error(response.status))
+        }
+      })
+      .then(data => {
+        alert(data.message);
+        window.location.href = "/students"
+      })
+      .catch(error => {
+        switch (error.message) {
+          case "400":
+            alert("Please check form values...");
+            break;
+          case "500":
+            alert("Please Try after some time...");
+            break;
+          default:
+            console.error(error);
+        }
+      })
+  });
+</script>

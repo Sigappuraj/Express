@@ -1,0 +1,72 @@
+<div class="container">
+  <h1>Teacher form</h1>
+  <form id="teacher-form" action="{{action}}" method="{{method}}" _method="{{method}}">
+    <label for="fname">First name:</label>
+    <input type="text" id="fname" name="firstName" value="{{teacher.firstName}}" placeholder="First Name" required />
+    <br />
+    <label for="lname">Last name:</label>
+    <input type="text" id="lname" name="lastName" value="{{teacher.lastName}}" placeholder="Last Name" required />
+    <br />
+    <label for="teacher-age">Age:</label>
+    <input type="text" id="teacher-age" name="age" value="{{teacher.age}}" placeholder="Age in years" required />
+    <br />
+    <label for="teacher-email">Email:</label>
+    <input type="text" id="teacher-email" name="mail" value="{{teacher.email}}" placeholder="Email" required />
+    <br />
+    <label for="class">Class:</label>
+    <input type="text" id="class" name="class" value="{{teacher.class}}" placeholder="class in years" required />
+    <br />
+    <input class="btn btn-primary" type="submit" value="Add Teacher" />
+  </form>
+</div>
+
+<script>
+
+  const $addTeacherForm = document.querySelector("#teacher-form");
+
+  $addTeacherForm.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const submitUrl = $addTeacherForm.action;
+    const submitMethod = $addTeacherForm.getAttribute("_method");
+    const formData = new FormData($addTeacherForm);
+    let teacherDetail = {};
+    for (const fields of formData.entries()) {
+      const [key, value] = fields;
+      teacherDetail[key] = value;
+    }
+
+    const config = {
+      method: submitMethod.toUpperCase(),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(teacherDetail)
+    }
+
+    fetch(submitUrl, config)
+      .then(response => {
+        if (response.status === 200) {
+          return response.json()
+        } else {
+          throw (new Error(response.status))
+        }
+      })
+      .then(data => {
+        alert(data.message);
+        window.location.href = "/teachers"
+      })
+      .catch(error => {
+        switch (error.message) {
+          case "400":
+            alert("Please check form values...");
+            break;
+          case "500":
+            alert("Please Try after some time...");
+            break;
+          default:
+            console.error(error);
+        }
+      })
+  });
+</script>

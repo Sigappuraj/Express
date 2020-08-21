@@ -1,0 +1,16 @@
+<div class="jumbotron">
+  <h1 class="display-4">School Home Page</h1>
+  <p class="lead">
+    Select the page you want to visit
+  </p>
+  <hr class="my-4" />
+  <p class="lead">
+    {{#if isAdmin}}
+    <a href="/students" class="btn btn-primary btn-lg">Students</a>
+    <a href="/teachers" class="btn btn-primary btn-lg">Teachers</a>
+    <a href="/logout">Logout</a>
+    {{else}}
+    <a href="/adminLogin" class="btn btn-primary btn-lg">Login</a>
+    {{/if}}
+  </p>
+</div>

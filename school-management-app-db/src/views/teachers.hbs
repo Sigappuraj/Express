@@ -1,0 +1,28 @@
+<div class="container">
+  <h1>Teachers Details</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Class</th>
+        <th scope="col">Email ID</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each data}}
+      <tr>
+        <th scope="row">{{this.id}}</th>
+        <td><a href="/teachers/{{this.id}}/students">{{this.firstName}}</a></td>
+        <td>{{this.lastName}}</td>
+        <td>{{this.class}}</td>
+        <td>{{this.email}}</td>
+        <td><a href="/edit-teacher/{{this.id}}">Edit</a></td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <a class="btn btn-primary btn-lg" href="/add-teacher">Add Teacher</a>
+</div>

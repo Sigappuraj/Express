@@ -1,0 +1,66 @@
+<div class="container">
+  <form id="admin-login-form" action="{{submitTarget}}" method="{{submitMethod}}">
+    <div class="form-group">
+      <label for="exampleInputEmail1">Email address</label>
+      <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+        placeholder="Enter email">
+      <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputPassword1">Password</label>
+      <input name="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+<script>
+  const $loginForm = document.querySelector("#admin-login-form");
+
+  $loginForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const submitUrl = $loginForm.action;
+    const submitMethod = $loginForm.method;
+    const formData = new FormData($loginForm);
+    let loginDetails = {};
+    for (const fields of formData.entries()) {
+      const [key, value] = fields;
+      loginDetails[key] = value;
+    }
+
+    const config = {
+      method: submitMethod.toUpperCase(),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(loginDetails)
+    }
+
+    fetch(submitUrl, config)
+      .then(response => {
+        if (response.status === 200) {
+          return response.json()
+        } else {
+          throw (new Error(response.status))
+        }
+      })
+      .then((data) => {
+        alert(data.message);
+        window.location.href = "/students"
+      })
+      .catch(error => {
+        switch (error.message) {
+          case "401":
+          case "400":
+            alert("Please check form values...");
+            break;
+          case "500":
+            alert("Please Try after some time...");
+            break;
+          default:
+            console.error(error);
+        }
+      })
+  })
+</script>
